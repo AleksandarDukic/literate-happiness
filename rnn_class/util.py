@@ -117,7 +117,7 @@ def get_wikipedia_data(n_files, n_vocab, by_paragraph=False):
         input_files = input_files[:n_files]
 
     for f in input_files:
-        print("reading:", f)
+
         for line in open(prefix + f):
             line = line.strip()
             # don't count headers, structured data, lists, etc...

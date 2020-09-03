@@ -18,8 +18,8 @@ import logging
 from sklearn.metrics.pairwise import pairwise_distances
 
 logging.basicConfig(
-  filename="Log_Test_File.txt",
-  level=logging.DEBUG,
+  filename="Log_Pretrained_Glove.txt",
+  level=logging.INFO,
   format='%(levelname)s: %(asctime)s %(message)s',
   datefmt='%m/%d/%Y %I:%M:%S'
 )
@@ -68,10 +68,22 @@ def find_analogies(w1, w2, w3):
   man = word2vec[w2]
   woman = word2vec[w3]
   v0 = king - man + woman
-
+  logging.info("v0")
+  logging.info(v0)
   distances = pairwise_distances(v0.reshape(1, D), embedding, metric=metric).reshape(V)
+  logging.info("embedding")
+  logging.info(embedding)
+  logging.info("metric")
+  logging.info(metric)
+  logging.info("V")
+  logging.info(V)
+  logging.info("distances")
+  logging.info(distances)
+
   idxs = distances.argsort()[:4]    # !@# sortira najmanje distance prvo pa uzima prva 4 elementa 
-  for idx in idxs:                  # prolazi kroz prva 4 elementa sa najmanjom distancom i bira najpogodniji
+  logging.info("idxs")              # prolazi kroz prva 4 elementa sa najmanjom distancom i bira najpogodniji
+  logging.info(idxs)
+  for idx in idxs:                  
     word = idx2word[idx]
     if word not in (w1, w2, w3): 
       best_word = word
@@ -93,6 +105,8 @@ def nearest_neighbors(w, n=5):
   logging.info(distances)
   
   idxs = distances.argsort()[1:n+1]
+  logging.info("idxs 2")
+  logging.info(idxs)
   print("neighbors of: %s" % w)
   for idx in idxs:
     print("\t%s" % idx2word[idx])
@@ -104,7 +118,7 @@ print('Loading word vectors...')
 word2vec = {}
 embedding = []
 idx2word = []
-with open('./large_files/glove.6B/glove.6B.50d.txt', encoding='utf-8') as f:
+with open('../large_files/glove.6B/glove.6B.50d.txt', encoding='utf-8') as f:
   # is just a space-separated text file in the format:
   # word vec[0] vec[1] vec[2] ...
   for line in f:

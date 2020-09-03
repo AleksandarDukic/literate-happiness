@@ -9,6 +9,18 @@ from builtins import range
 
 
 import json
+
+import logging
+logging.basicConfig(
+  filename="Log_Tfidf_Tsne.txt",
+  level=logging.INFO,
+  format='%(levelname)s: %(asctime)s %(message)s',
+  datefmt='%m/%d/%Y %I:%M:%S'
+)
+#logging.info("Logging distances, v = word2vec[w]")
+#logging.info(v)
+#logging.info(distances)
+
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
@@ -26,6 +38,8 @@ from util import find_analogies
 from sklearn.feature_extraction.text import TfidfTransformer
 
 
+
+
 def main():
     analogies_to_try = (
         ('king', 'man', 'woman'),
@@ -37,6 +51,10 @@ def main():
     ### choose a data source ###
     # sentences, word2idx = get_sentences_with_word2idx_limit_vocab(n_vocab=1500)
     sentences, word2idx = get_wikipedia_data(n_files=3, n_vocab=2000, by_paragraph=True)
+    logging.info("senteces")
+    logging.info(sentences)
+    logging.info("word2idx")
+    logging.info(word2idx)
     # with open('tfidf_word2idx.json', 'w') as f:
     #     json.dump(word2idx, f)
 
@@ -64,19 +82,24 @@ def main():
             A[i,j] += 1
         j += 1
     print("finished getting raw counts")
-
+    logging.info("A zeros VxD")
+    logging.info(A)
     transformer = TfidfTransformer()
     A = transformer.fit_transform(A.T).T
-
+    logging.info("A Transformed")
+    logging.info(A)
     # tsne requires a dense array
     A = A.toarray()
-
+    logging.info("A to Array")
+    logging.info(A)
     # map back to word in plot
     idx2word = {v:k for k, v in iteritems(word2idx)}
 
     # plot the data in 2-D
     tsne = TSNE()
     Z = tsne.fit_transform(A)
+    logging.info("Z is tsne.fit_transform(A)")
+    logging.info(Z)
     plt.scatter(Z[:,0], Z[:,1])
     for i in range(V):
         try:
@@ -92,6 +115,8 @@ def main():
     # 2) create a higher-D word embedding
     tsne = TSNE(n_components=3)
     We = tsne.fit_transform(A)
+    logging.info("We")
+    logging.info(We)
 
     # 3) use a classic dimensionality reduction technique
     # svd = KernelPCA(n_components=20, kernel='rbf')
