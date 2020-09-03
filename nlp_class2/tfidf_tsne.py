@@ -44,8 +44,8 @@ def main():
     for word_list in analogies_to_try:
         for w in word_list:
             if w not in word2idx:
-                print("%s not found in vocab, remove it from \
-                    analogies to try or increase vocab size" % w)
+                #print("%s not found in vocab, remove it from \
+                #    analogies to try or increase vocab size" % w)
                 notfound = True
     if notfound:
         exit()
@@ -57,7 +57,7 @@ def main():
 
     # create raw counts first
     A = np.zeros((V, N))
-    print("V:", V, "N:", N)
+    #print("V:", V, "N:", N)
     j = 0
     for sentence in sentences:
         for i in sentence:

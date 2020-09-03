@@ -145,7 +145,7 @@ def get_wikipedia_data(n_files, n_vocab, by_paragraph=False):
     idx_new_idx_map = {}
     for idx, count in sorted_word_idx_count[:n_vocab]:
         word = idx2word[idx]
-        print(word, count)
+        print(word, count, idx)
         word2idx_small[word] = new_idx
         idx_new_idx_map[idx] = new_idx
         new_idx += 1
