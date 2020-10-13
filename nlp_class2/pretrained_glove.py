@@ -68,21 +68,23 @@ def find_analogies(w1, w2, w3):
   man = word2vec[w2]
   woman = word2vec[w3]
   v0 = king - man + woman
-  logging.info("v0")
-  logging.info(v0)
+  #logging.info("v0")
+  #logging.info(v0)
+  
   distances = pairwise_distances(v0.reshape(1, D), embedding, metric=metric).reshape(V)
-  logging.info("embedding")
-  logging.info(embedding)
-  logging.info("metric")
-  logging.info(metric)
-  logging.info("V")
-  logging.info(V)
-  logging.info("distances")
-  logging.info(distances)
+  
+  #logging.info("embedding")
+  #logging.info(embedding)
+  #logging.info("metric")
+  #logging.info(metric)
+  #logging.info("V")
+  #logging.info(V)
+  #logging.info("distances")
+  #logging.info(distances)
 
   idxs = distances.argsort()[:4]    # !@# sortira najmanje distance prvo pa uzima prva 4 elementa 
-  logging.info("idxs")              # prolazi kroz prva 4 elementa sa najmanjom distancom i bira najpogodniji
-  logging.info(idxs)
+  #logging.info("idxs")              # prolazi kroz prva 4 elementa sa najmanjom distancom i bira najpogodniji
+  #logging.info(idxs)
   for idx in idxs:                  
     word = idx2word[idx]
     if word not in (w1, w2, w3): 
@@ -100,13 +102,13 @@ def nearest_neighbors(w, n=5):
   v = word2vec[w]
   distances = pairwise_distances(v.reshape(1, D), embedding, metric=metric).reshape(V)
   
-  logging.info("Logging distances, v = word2vec[w]")
-  logging.info(v)
-  logging.info(distances)
+  #logging.info("Logging distances, v = word2vec[w]")
+  #logging.info(v)
+  #logging.info(distances)
   
   idxs = distances.argsort()[1:n+1]
-  logging.info("idxs 2")
-  logging.info(idxs)
+  #logging.info("idxs 2")
+  #logging.info(idxs)
   print("neighbors of: %s" % w)
   for idx in idxs:
     print("\t%s" % idx2word[idx])

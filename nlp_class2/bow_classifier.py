@@ -6,11 +6,21 @@ from builtins import range
 # Note: you may need to update your version of future
 # sudo pip install -U future
 
+# imam trening i test rojters datu. svaka recenica ima svoj label. Treniramo, testiramo
+
 
 import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import logging
+
+logging.basicConfig(
+  filename="Log_Bow_Classifier.txt",
+  level=logging.INFO,
+  format='%(levelname)s: %(asctime)s %(message)s',
+  datefmt='%m/%d/%Y %I:%M:%S'
+)
 
 from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier
 from gensim.models import KeyedVectors
@@ -39,13 +49,13 @@ class GloveVectorizer:
         word = values[0]
         vec = np.asarray(values[1:], dtype='float32')
         word2vec[word] = vec
-        embedding.append(vec)
+        embedding.append(vec) # niz vektora
         idx2word.append(word)
     print('Found %s word vectors.' % len(word2vec))
 
     # save for later
     self.word2vec = word2vec
-    self.embedding = np.array(embedding)
+    self.embedding = np.array(embedding) # matrica !
     self.word2idx = {v:k for k,v in enumerate(idx2word)}
     self.V, self.D = self.embedding.shape
 
@@ -56,6 +66,7 @@ class GloveVectorizer:
     X = np.zeros((len(data), self.D))
     n = 0
     emptycount = 0
+    # za svaku recenicu -> za svaku rec vadi vektore, pravi matricu za recenicu i tu matricu svodi na vektor uz pomoc "mean(axis=0)" zbir vektora reci po koloni
     for sentence in data:
       tokens = sentence.lower().split()
       vecs = []
@@ -129,7 +140,7 @@ class Word2VecVectorizer:
 
 vectorizer = GloveVectorizer()
 # vectorizer = Word2VecVectorizer()
-Xtrain = vectorizer.fit_transform(train.content)
+Xtrain = vectorizer.fit_transform(train.content) # matrica recenica pretvorenih u indexe reci
 Ytrain = train.label
 
 Xtest = vectorizer.transform(test.content)
@@ -143,4 +154,5 @@ model.fit(Xtrain, Ytrain)
 print("train score:", model.score(Xtrain, Ytrain))
 print("test score:", model.score(Xtest, Ytest))
 
-
+# Recenica ide u matricu koju cine vektori reci. Od matrice recenice se dobija novi vektor sabiranjem po koloni, te se recenica svodi na jedan vektor 'vecs.mean(axis=0)'.
+# Vektori recenica se dodaju i cine matricu X

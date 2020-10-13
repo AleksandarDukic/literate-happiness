@@ -17,6 +17,7 @@ from rnn_class.brown import get_sentences_with_word2idx_limit_vocab, get_sentenc
 
 
 def get_bigram_probs(sentences, V, start_idx, end_idx, smoothing=1):
+  print("heelllo%s",start_idx, "123123",end_idx)
   # structure of bigram probability matrix will be:
   # (last word, current word) --> probability
   # we will use add-1 smoothing
@@ -39,8 +40,9 @@ def get_bigram_probs(sentences, V, start_idx, end_idx, smoothing=1):
         # final word
         bigram_probs[sentence[i], end_idx] += 1
 
-  # normalize the counts along the rows to get probabilities
-  bigram_probs /= bigram_probs.sum(axis=1, keepdims=True)
+  # normalize the counts along the rows to get robabilities
+  bigram_probs /= bigram_probs.sum(axis=1, keepdims=True) # sabere svaki row(dobije se matrica [V,1]) i podeli taj row sa sumom koja odgovara tom row-u
+
   return bigram_probs
 
 
@@ -49,7 +51,7 @@ if __name__ == '__main__':
   # load in the data
   # note: sentences are already converted to sequences of word indexes
   # note: you can limit the vocab size if you run out of memory
-  sentences, word2idx = get_sentences_with_word2idx_limit_vocab(10000)
+  sentences, word2idx = get_sentences_with_word2idx_limit_vocab(10000) # list of sentences [11,22,33] as numbers + word2idx {'lala':1, ...} map like this
   # sentences, word2idx = get_sentences_with_word2idx()
 
   # vocab size

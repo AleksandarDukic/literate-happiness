@@ -7,6 +7,13 @@ from builtins import range
 
 
 import numpy as np
+import logging
+logging.basicConfig(
+  filename="Log_Get_Wikipedia_Data.txt",
+  level=logging.INFO,
+  format='%(levelname)s: %(asctime)s %(message)s',
+  datefmt='%m/%d/%Y %I:%M:%S'
+)
 import string
 import os
 import sys
@@ -70,6 +77,7 @@ def get_robert_frost():
     current_idx = 2
     sentences = []
     for line in open('../hmm_class/robert_frost.txt'):
+
         line = line.strip()
         if line:
             tokens = remove_punctuation(line.lower()).split()
@@ -89,7 +97,7 @@ def my_tokenizer(s):
     return s.split()
 
 def get_wikipedia_data(n_files, n_vocab, by_paragraph=False):
-    prefix = '../large_files/'
+    prefix = './large_files/'
 
     if not os.path.exists(prefix):
         print("Are you sure you've downloaded, converted, and placed the Wikipedia data into the proper folder?")
@@ -117,8 +125,11 @@ def get_wikipedia_data(n_files, n_vocab, by_paragraph=False):
         input_files = input_files[:n_files]
 
     for f in input_files:
-
+        logging.info("f")
+        #logging.info(f)
         for line in open(prefix + f):
+            logging.info("line")
+            #logging.info(line)
             line = line.strip()
             # don't count headers, structured data, lists, etc...
             if line and line[0] not in ('[', '*', '-', '|', '=', '{', '}'):
@@ -128,7 +139,10 @@ def get_wikipedia_data(n_files, n_vocab, by_paragraph=False):
                     sentence_lines = line.split('. ')
                 for sentence in sentence_lines:
                     tokens = my_tokenizer(sentence)
+                    #logging.info("TOKENS")
+                    print(tokens)
                     for t in tokens:
+                        logging.info(t)
                         if t not in word2idx:
                             word2idx[t] = current_idx
                             idx2word.append(t)
@@ -139,7 +153,26 @@ def get_wikipedia_data(n_files, n_vocab, by_paragraph=False):
                     sentences.append(sentence_by_idx)
 
     # restrict vocab size
+    logging.info("word2idx")
+    logging.info(word2idx)
+
+    logging.info("idx2word")
+    logging.info(idx2word)
+
+    logging.info("word_idx_count.items()")
+    logging.info(word_idx_count.items())
+
+    logging.info("key")
+    logging.info(operator.itemgetter(1))
+
+    logging.info("NOT SORTED")
+    logging.info(word_idx_count)
+
     sorted_word_idx_count = sorted(word_idx_count.items(), key=operator.itemgetter(1), reverse=True)
+
+    logging.info("SORTED ALL")
+    logging.info(sorted_word_idx_count)
+
     word2idx_small = {}
     new_idx = 0
     idx_new_idx_map = {}
@@ -166,7 +199,8 @@ def get_wikipedia_data(n_files, n_vocab, by_paragraph=False):
         if len(sentence) > 1:
             new_sentence = [idx_new_idx_map[idx] if idx in idx_new_idx_map else unknown for idx in sentence]
             sentences_small.append(new_sentence)
-
+    logging.info("word2idx_small")
+    logging.info(word2idx_small)
     return sentences_small, word2idx_small
 
 def get_tags(s):

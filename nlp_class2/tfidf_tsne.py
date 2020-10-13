@@ -74,7 +74,7 @@ def main():
     N = len(sentences)
 
     # create raw counts first
-    A = np.zeros((V, N))
+    A = np.zeros((V, N))    #rows, columns
     #print("V:", V, "N:", N)
     j = 0
     for sentence in sentences:

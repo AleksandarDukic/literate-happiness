@@ -23,7 +23,7 @@ def get_sentences():
 
 
 def get_sentences_with_word2idx():
-  sentences = get_sentences()
+  sentences = get_sentences() # list of 57340 like : ['He', 'will', 'be', 'succeeded', 'by', 'Rob', 'Ledford', 'of', 'Gainesville', ',', 'who', 'has', 'been', 'an', 'assistant', 'more', 'than', 'three', 'years', '.']
   indexed_sentences = []
 
   i = 2
@@ -39,7 +39,7 @@ def get_sentences_with_word2idx():
       indexed_sentence.append(word2idx[token])
     indexed_sentences.append(indexed_sentence)
 
-  print("Vocab size:", i)
+  #print("Vocab size:", i)
   return indexed_sentences, word2idx
 
 
@@ -57,20 +57,21 @@ def get_sentences_with_word2idx_limit_vocab(n_vocab=2000, keep_words=KEEP_WORDS)
   }
 
   for sentence in sentences:
+    #print(sentence)
     indexed_sentence = []
     for token in sentence:
       token = token.lower()
       if token not in word2idx:
-        idx2word.append(token)
-        word2idx[token] = i
+        idx2word.append(token)    # pravi tupple{ index:rec }
+        word2idx[token] = i       # pravi niz[rec] = index
         i += 1
 
       # keep track of counts for later sorting
       idx = word2idx[token]
-      word_idx_count[idx] = word_idx_count.get(idx, 0) + 1
+      word_idx_count[idx] = word_idx_count.get(idx, 0) + 1      # pravi tupple { index:count }
 
       indexed_sentence.append(idx)
-    indexed_sentences.append(indexed_sentence)
+    indexed_sentences.append(indexed_sentence)                  # pravi red indeksiranih recenica [[17,32,22,600,409], [], ...]
 
 
 
@@ -80,20 +81,20 @@ def get_sentences_with_word2idx_limit_vocab(n_vocab=2000, keep_words=KEEP_WORDS)
   # so that they are included when I pick the most
   # common words
   for word in keep_words:
-    word_idx_count[word2idx[word]] = float('inf')
+    word_idx_count[word2idx[word]] = float('inf')  # najdemo koji je index reci koju zelimo da sacuvamo i njen "Count" postavimo na infinity
 
-  sorted_word_idx_count = sorted(word_idx_count.items(), key=operator.itemgetter(1), reverse=True)
+  sorted_word_idx_count = sorted(word_idx_count.items(), key=operator.itemgetter(1), reverse=True) # od {1:1,2:2, 3:float(inf),...} pravi niz [(1,1),(2,2),(3,inf)] - [(idx,count)]
   word2idx_small = {}
   new_idx = 0
   idx_new_idx_map = {}
   for idx, count in sorted_word_idx_count[:n_vocab]:
     word = idx2word[idx]
-    print(word, count)
+    #print(word, count)
     word2idx_small[word] = new_idx
     idx_new_idx_map[idx] = new_idx
     new_idx += 1
   # let 'unknown' be the last token
-  word2idx_small['UNKNOWN'] = new_idx 
+  word2idx_small['UNKNOWN'] = new_idx
   unknown = new_idx
 
   assert('START' in word2idx_small)
@@ -109,6 +110,5 @@ def get_sentences_with_word2idx_limit_vocab(n_vocab=2000, keep_words=KEEP_WORDS)
       sentences_small.append(new_sentence)
 
   return sentences_small, word2idx_small
-
 
 
